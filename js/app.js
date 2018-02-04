@@ -1,9 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {installRelayDevTools} from 'relay-devtools';
+import HashProtocol from 'farce/lib/HashProtocol';
+import queryMiddleware from 'farce/lib/queryMiddleware';
+import createFarceRouter from 'found/lib/createFarceRouter';
+import createRender from 'found/lib/createRender';
+import { Resolver } from 'found-relay';
 
-import { QueryRenderer,graphql } from 'react-relay';
+import { installRelayDevTools } from 'relay-devtools';
+
 import {
   Environment,
   Network,
@@ -11,12 +16,12 @@ import {
   Store,
 } from 'relay-runtime';
 
+import {Login} from './components/Login';
 import TodoApp from './components/TodoApp';
+import routes from './routes';
 
 // Useful for debugging, but remember to remove for a production deploy.
 installRelayDevTools();
-
-const mountNode = document.getElementById('root');
 
 function fetchQuery(operation, variables) {
   return fetch('/graphql', {
@@ -33,30 +38,22 @@ function fetchQuery(operation, variables) {
   });
 }
 
-const modernEnvironment = new Environment({
+export const modernEnvironment = new Environment({
   network: Network.create(fetchQuery),
   store: new Store(new RecordSource()),
 });
 
+const Router = createFarceRouter({
+  historyProtocol: new HashProtocol(),
+  historyMiddlewares: [queryMiddleware],
+  routeConfig: routes,
+
+  render: createRender({}),
+});
+
+const mountNode = document.getElementById('root');
+
 ReactDOM.render(
-  <QueryRenderer
-    environment = {modernEnvironment}
-    query = {graphql`
-      query appQuery {
-        viewer {
-          ...TodoApp_viewer
-        }
-      }
-    `}
-    variables = {{}}
-    render = {({error, props}) => {
-      if (props) {
-        return <TodoApp viewer={props.viewer} />;
-      }
-      else {
-        return <div>Loading</div>;
-      }
-    }}
-  />,
+  <Router resolver={new Resolver(modernEnvironment)}  />,
   mountNode
 );

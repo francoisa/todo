@@ -6,6 +6,7 @@ import {
   createFragmentContainer,
   graphql,
 } from 'react-relay';
+import { FormControl, Label } from 'react-bootstrap';
 
 class TodoList extends React.Component {
   _handleMarkAllChange = (e) => {
@@ -30,20 +31,22 @@ class TodoList extends React.Component {
     const numTodos = this.props.viewer.totalCount;
     const numCompletedTodos = this.props.viewer.completedCount;
     return (
-      <section className="main">
-        <input
-          checked={numTodos === numCompletedTodos}
-          className="toggle-all"
-          onChange={this._handleMarkAllChange}
-          type="checkbox"
-        />
-        <label htmlFor="toggle-all">
-          Mark all as complete
-        </label>
+       <div>
+        <h3>
+        <Label>
+          <FormControl
+            checked={numTodos === numCompletedTodos}
+            onChange={this._handleMarkAllChange}
+            type="checkbox"
+            bsClass="text-left"
+          />
+          &nbsp;Mark all as complete
+        </Label>
+        </h3>
         <ul className="todo-list">
           {this.renderTodos()}
         </ul>
-      </section>
+      </div>
     );
   }
 }

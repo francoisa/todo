@@ -1,6 +1,8 @@
 export class Todo {}
 export class User {}
 
+const jwt = require('jsonwebtoken');
+
 // Mock authenticated ID
 const VIEWER_ID = 'me';
 
@@ -53,6 +55,21 @@ export function getUser(id) {
 
 export function getViewer() {
   return getUser(VIEWER_ID);
+}
+
+export function getViewerById(token) {
+  const jwt = require('jsonwebtoken');
+  console.log("database:token: " + token);
+  const payload = jwt.decode(token);
+  if (payload.data && payload.data.id) {
+    const { id } = payload.data;
+    console.log("database:sqlitse3-dao:id: " + id);
+    return getUser(VIEWER_ID);
+  }
+  else {
+    console.error("database:sqlitse3-dao:payload: " + payload + " does not have a data.id field");
+    return getUser(VIEWER_ID);
+  }
 }
 
 export function markAllTodos(complete) {

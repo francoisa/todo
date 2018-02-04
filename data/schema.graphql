@@ -21,6 +21,17 @@ type ChangeTodoStatusPayload {
   clientMutationId: String
 }
 
+input CreateSessionInput {
+  username: String!
+  password: String!
+  clientMutationId: String
+}
+
+type CreateSessionPayload {
+  viewer: Viewer
+  clientMutationId: String
+}
+
 input MarkAllTodosInput {
   complete: Boolean!
   clientMutationId: String
@@ -33,6 +44,8 @@ type MarkAllTodosPayload {
 }
 
 type Mutation {
+  # Authenticate and return a viewer with a jwt token
+  createSession(input: CreateSessionInput!): CreateSessionPayload
   addTodo(input: AddTodoInput!): AddTodoPayload
   changeTodoStatus(input: ChangeTodoStatusInput!): ChangeTodoStatusPayload
   markAllTodos(input: MarkAllTodosInput!): MarkAllTodosPayload
@@ -63,7 +76,7 @@ type PageInfo {
 }
 
 type Query {
-  viewer: User
+  viewer(token: String): User
 
   # Fetches an object given its ID
   node(
@@ -132,7 +145,17 @@ type TodoEdge {
 type User implements Node {
   # The ID of an object
   id: ID!
+  email: String
+  username: String
+  firstName: String
+  lastName: String
   todos(status: String = "any", after: String, first: Int, before: String, last: Int): TodoConnection
   totalCount: Int
   completedCount: Int
+}
+
+type Viewer implements Node {
+  # The ID of an object
+  id: ID!
+  token: String
 }

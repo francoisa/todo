@@ -10,7 +10,7 @@ const GRAPHQL_PORT = 8080;
 
 const handleNonRoot = function (req, res, next) {
   if (req && req.path === '/favicon.ico') {
-    res.sendFile('public/favicon.js');
+    res.sendFile(path.resolve(__dirname, 'public', 'favicon.ico'));
   }
   else if (next) {
     next();
@@ -19,9 +19,15 @@ const handleNonRoot = function (req, res, next) {
 
 // Expose a GraphQL endpoint
 const graphQLServer = express();
-graphQLServer.use('/', handleNonRoot, graphQLHTTP({schema, graphiql: true, pretty: true}));
+graphQLServer.use('/', handleNonRoot, graphQLHTTP(
+  {
+    schema, graphiql:
+    true,
+    pretty: true
+  })
+);
 graphQLServer.listen(GRAPHQL_PORT, () => console.log(
-  `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
+  `server:GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
 ));
 
 // Serve the Relay app
@@ -38,6 +44,7 @@ const compiler = webpack({
   },
   output: {filename: 'app.js', path: '/'},
 });
+
 const app = new WebpackDevServer(compiler, {
   contentBase: '/public/',
   proxy: {'/graphql': `http://localhost:${GRAPHQL_PORT}`},
@@ -47,5 +54,5 @@ const app = new WebpackDevServer(compiler, {
 // Serve static resources
 app.use('/', express.static(path.resolve(__dirname, 'public')));
 app.listen(APP_PORT, () => {
-  console.log(`App is now running on http://localhost:${APP_PORT}`);
+  console.log(`server:App is now running on http://localhost:${APP_PORT}`);
 });

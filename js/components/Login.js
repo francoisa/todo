@@ -1,54 +1,144 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { Panel, Grid, Row, Col, Button } from 'react-bootstrap';
+import CreateSessionMutation from '../mutations/CreateSessionMutation';
+import TodoApp from './TodoApp';
+import { QueryRenderer,graphql } from 'react-relay';
+import { modernEnvironment } from '../app';
+
+var token = localStorage.getItem('token');
+
+function Authenticated(parent) {
+  token = localStorage.getItem('token');
+  if (token) {
+      console.log("Login:token: " + token);
+      return (<div>{parent.children}</div>);
+  }
+  else {
+    return null;
+  }
+}
+
+function NotAuthenticated(parent) {
+  token = localStorage.getItem('token');
+  if (!token) {
+      return (<div>{parent.children}</div>);
+  }
+  else {
+    return null;
+  }
+}
 
 export class Login extends Component {
-  _onLogin(username, pwd) {
-    this.props.relay.commitUpdate(
-    );
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+      authenticated: false
+    }
+    this._handleInputChange = this._handleInputChange.bind(this);
+  }
+
+  _onLogin() {
+    const { username, password } = this.state;
+    const _this = this;
+    CreateSessionMutation(username, password, () => {
+      token = localStorage.getItem('token');
+      _this.setState({authenticated: true});
+    })
   }
 
   _welcomeMessage() {
-    const { message } = this.props.username
+    const { message } = this.props.username ? this.props.username : { message: false }
+    if (message) {
     return (<div>
       {message}
       </div>);
+    }
+    else {
+      return (<div>Please log in:</div>);
+    }
+  }
+
+  _handleInputChange(event) {
+    const { target } = event;
+    const { name, value } = target;
+    this.setState( { [name] : value })
   }
 
   _loginForm() {
-    let username, pwd;
     return (<div>
       <input
-        type="text"
         className="form-control"
-        ref={ node => username = node }
+        name="username"
+        value={this.state.username}
+        type="text"
+        onChange={this._handleInputChange}
         placeholder="username"/>
       <br/>
       <input
-        type="password"
         className="form-control"
-        ref={ node => pwd = node }
+        name="password"
+        value={this.state.password}
+        type="password"
+        onChange={this._handleInputChange}
         placeholder="password"/>
       <br/>
-      <Button onClick={() => this._onLogin(username.value, pwd.value)}>
+      <Button onClick={() => this._onLogin()}>
         Log in
       </Button>
     </div>)
   }
 
   render () {
-    return (
-      <Grid>
-        <Row>
-          <Col xs={4} md={4}>
-            {this._welcomeMessage()}
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={4} md={4}>
-            {this._loginForm()}
-          </Col>
-        </Row>
-      </Grid>
-    );
+    return (<div>
+      <NotAuthenticated>
+        <Grid>
+          <Row>
+            <Col xs={4} md={4}>
+              {this._welcomeMessage()}
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={4} md={4}>
+              {this._loginForm()}
+            </Col>
+          </Row>
+        </Grid>
+      </NotAuthenticated>
+      <Authenticated>
+        <QueryRenderer
+          environment = {modernEnvironment}
+          query = {graphql`
+            query LoginQuery($token: String!) {
+              viewer(token: $token) {
+                ...TodoApp_viewer
+              }
+            }
+          `}
+          variables = {{token: token}}
+          render = {({error, props}) => {
+            console.log('Login:props: ' + JSON.stringify(props) + ' token:' +
+              token);
+            if (props) {
+              return <TodoApp viewer={props.viewer} />;
+            }
+            else {
+              return (
+                <Grid>
+                  <Row>
+                    <Col xs={4} md={4}>
+                      <Panel bsClass="text-center">
+                        <Panel.Body>Loading</Panel.Body>
+                      </Panel>
+                    </Col>
+                  </Row>
+                </Grid>
+              );
+            }
+          }}
+        />,
+      </Authenticated>
+    </div>);
   }
 };

@@ -30,11 +30,24 @@ import {
   getTodos,
   getUser,
   getViewer,
+  getViewerById,
   markAllTodos,
   removeCompletedTodos,
   removeTodo,
-  renameTodo,
+  renameTodo
 } from './database';
+
+import {
+  Status,
+  UserDao,
+  TodoDao,
+  getIdFromToken
+} from './sqlite3-dao';
+
+const sha1 = require('sha1');
+
+const user = new UserDao();
+const todo = new TodoDao();
 
 const {nodeInterface, nodeField} = nodeDefinitions(
   (globalId) => {
@@ -42,7 +55,7 @@ const {nodeInterface, nodeField} = nodeDefinitions(
     if (type === 'Todo') {
       return getTodo(id);
     } else if (type === 'User') {
-      return getUser(id);
+      return getUser(getIdFromToken(id));
     }
     return null;
   },
@@ -84,6 +97,10 @@ const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: globalIdField('User'),
+    email: { type: GraphQLString },
+    username: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     todos: {
       type: TodosConnection,
       args: {
@@ -113,7 +130,10 @@ const Query = new GraphQLObjectType({
   fields: {
     viewer: {
       type: GraphQLUser,
-      resolve: () => getViewer(),
+      args: {
+        token: { type: GraphQLString }
+      },
+      resolve: (_, {token}) => getViewerById(token),
     },
     node: nodeField,
   },
@@ -251,9 +271,37 @@ const GraphQLRenameTodoMutation = mutationWithClientMutationId({
   },
 });
 
+const GraphQLUserToken = new GraphQLObjectType({
+  name: 'Viewer',
+  fields: () => ({
+    id: globalIdField('User'),
+    token: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const GraphQLCreateSessionMutation = mutationWithClientMutationId({
+  name: 'CreateSession',
+  description: "Authenticate and return a viewer with a jwt token",
+  inputFields: {
+    username: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    viewer: {
+      type: GraphQLUserToken,
+      resolve: (obj) => obj
+    },
+  },
+  mutateAndGetPayload: ({username, password}) => {
+    return user.authenticate(username, password);
+  },
+});
+
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
+    createSession: GraphQLCreateSessionMutation,
     addTodo: GraphQLAddTodoMutation,
     changeTodoStatus: GraphQLChangeTodoStatusMutation,
     markAllTodos: GraphQLMarkAllTodosMutation,

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { FormControl } from 'react-bootstrap';
 
 const PropTypes = require('prop-types');
 
@@ -57,7 +58,9 @@ export default class TodoTextInput extends React.Component {
   };
   render() {
     return (
-      <input
+      <FormControl
+        type="text"
+        bsClass="input-lg"
         className={this.props.className}
         onBlur={this._handleBlur}
         onChange={this._handleChange}
