@@ -133,7 +133,7 @@ const Query = new GraphQLObjectType({
       args: {
         token: { type: GraphQLString }
       },
-      resolve: (_, {token}) => getViewerById(token),
+      resolve: (_, {token}) => user.getByToken(token),
     },
     node: nodeField,
   },

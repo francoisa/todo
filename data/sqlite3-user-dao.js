@@ -99,6 +99,28 @@ UserDao.prototype.authenticate = function(username, pwd, cb) {
   }
 }
 
+UserDao.prototype.readByToken = function(db, token, cb) {
+  console.log("sqlite3-dao:token: " + token);
+  const payload = jwt.decode(token);
+  if (payload.data && payload.data.id) {
+    const { id } = payload.data;
+    console.log("sqlite3-dao:id: " + id);
+    var user = {result: "ERROR", code: "NOT_FOUND"};
+    if (cb) {
+      this._read(id, user, null, cb);
+    }
+    else {
+      var _this = this;
+      return new Promise( function(resolve, reject) {
+        _this._read(id, user, resolve);
+      });
+    }
+  }
+  else {
+    console.error("sqlite3-dao:payload: " + payload + " does not have a data.id field");
+    return -1;
+  }
+}
 
 UserDao.prototype._readByUsername = function(db, username, user, resolve, cb) {
   const sel_user = 'SELECT rowid, username, email, first_name, last_name ' +
