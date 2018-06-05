@@ -1,4 +1,4 @@
 {
-  "presets": ["react","env","stage-2"],
-  "plugins": ["relay" ]
+  "presets": ["env", "react"],
+  "plugins": ["transform-react-jsx"],
 }
