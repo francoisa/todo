@@ -6,9 +6,12 @@
   "repository": "git@github.com:francoisa/todo.git",
   "author": "francoisa <andre.francois@gmail.com>",
   "license": "MIT",
+  "proxy": "http://localhost:8080",
   "dependencies": {
+    "babel-plugin-relay": "^1.6.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "babel-relay-plugin": "^0.11.0",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "express-jwt": "^5.3.1",
@@ -25,6 +28,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "chalk": "^2.4.1",
     "css-loader": "^0.28.11",
     "html-loader": "^0.5.5",
@@ -38,6 +42,8 @@
     "webpack-dev-server": "^3.1.4"
   },
   "scripts": {
+    "relay": "relay-compiler --src . --schema schema.graphql --extensions js jsx",
+    "schema": "babel-node scripts/updateSchema.js",
     "start": "babel-node scripts/start"
   }
 }

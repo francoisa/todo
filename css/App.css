@@ -1,0 +1,41 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  height: 25px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  padding: 5px;
+  font-size: large;
+}
+
+.list {
+  text-align: left;
+}
+
+.subheading {
+  padding-left: 50px;
+  padding-top: 10px;
+}
+
+.addform {
+  padding-left: 50px;
+  padding-top: 10px;
+}
+
+.addform input {
+  padding-right: 10px;
+}
+
+ul.todolist  {
+    list-style-type: none
+}

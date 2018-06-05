@@ -12,7 +12,10 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
-        options: { presets: ['env', 'react'], plugins: ['transform-react-jsx'] }
+        options: {
+          presets: ['env', 'react', 'stage-2'],
+          plugins: ['transform-react-jsx', 'relay']
+        }
       },
       {
         test: /\.css$/,
