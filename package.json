@@ -35,6 +35,7 @@
     "html-webpack-plugin": "^3.2.0",
     "htmllint-loader": "^2.1.4",
     "jasmine": "^3.1.0",
+    "jest": "^23.1.0",
     "react-dev-utils": "^5.0.1",
     "style-loader": "^0.21.0",
     "webpack": "^4.10.2",
@@ -44,6 +45,7 @@
   "scripts": {
     "relay": "relay-compiler --src . --schema schema.graphql --extensions js jsx",
     "schema": "babel-node scripts/updateSchema.js",
-    "start": "babel-node scripts/start"
+    "start": "babel-node scripts/start",
+    "test": "jest"
   }
 }
