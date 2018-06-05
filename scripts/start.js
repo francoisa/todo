@@ -33,12 +33,13 @@ const isInteractive = process.stdout.isTTY;
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 }
+*/
 
 const express = require('express');
 const graphQLHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
 const jwt = require('express-jwt');
-const schema = require('./todolistSchema').TodoSchema;
+const schema = require('../server/todolistSchema').TodoSchema;
 
 const GRAPHQL_PORT = 8080;
 
@@ -52,7 +53,7 @@ const handleNonRoot = function (req, res, next) {
 }
 
 const graphQLServer = express();
-const ObjectDao = require('./todolistObjectDao').ObjectDao;
+const ObjectDao = require('../server/todolistObjectDao').ObjectDao;
 const dao = new ObjectDao();
 graphQLServer.use('/graphql', graphQLHTTP({
     schema: schema,
@@ -62,7 +63,6 @@ graphQLServer.use('/graphql', graphQLHTTP({
 
 graphQLServer.listen(GRAPHQL_PORT);
 console.log('GraphQL server listening on port: ' + GRAPHQL_PORT);
-*/
 
 // Tools like Cloud9 rely on this.
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
