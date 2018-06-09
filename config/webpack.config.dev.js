@@ -1,51 +1,16 @@
 const path = require("path");
-const webpack = require("webpack");
-const bundlePath = path.resolve(__dirname, "/dist/");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const bundlePath = path.resolve(__dirname, "../dist");
+const merge = require('webpack-merge');
+const common = require('./webpack.config.common');
 
-module.exports = {
+module.exports = merge(common, {
   mode: 'development',
-  entry: "./index.js",
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['env', 'react', 'stage-2'],
-          plugins: ['transform-react-jsx', 'relay']
-        }
-      },
-      {
-        test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
-      },
-      {
-        test: /\.html$/,
-        use: [
-          "htmllint-loader",
-          {
-            loader: "html-loader",
-            options: {
-            }
-          }
-        ]
-      }
-    ]
-  },
-  resolve: { extensions: ['*', '.js', '.jsx'] },
-  output: {
-    publicPath: bundlePath,
-    filename: "bundle.js"
-  },
   devServer: {
-    contentBase: path.join(__dirname,'public'),
+    contentBase: path.join(__dirname,'../dist'),
     hot: true,
     hotOnly: true,
+    path: bundlePath,
     port: 3000,
-    proxy: { 'graphql': 'http://localhost:8080' },
-    publicPath: bundlePath
+    proxy: { 'graphql': 'http://localhost:8080' }
   },
-  plugins: [ new webpack.HotModuleReplacementPlugin(), new HtmlWebpackPlugin() ]
-};
+});
