@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { TodoSchema } from '../server/todolistSchema';
+import { TodoSchema } from '../server/graphql/todolistSchema';
 import { printSchema } from 'graphql';
 
-const schemaPath = path.resolve(__dirname, '../schema.graphql');
+const schemaPath = path.resolve(__dirname, '../server/graphql/schema.graphql');
 
 fs.writeFileSync(schemaPath, printSchema(TodoSchema));
 

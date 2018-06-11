@@ -39,7 +39,7 @@ const express = require('express');
 const graphQLHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
 const jwt = require('express-jwt');
-const schema = require('../server/todolistSchema').TodoSchema;
+const schema = require('../server/graphql/todolistSchema').TodoSchema;
 
 const GRAPHQL_PORT = 8080;
 
