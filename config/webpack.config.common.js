@@ -52,7 +52,7 @@ module.exports = {
     new CleanWebpackPlugin(['../dist']),
     new HtmlWebpackPlugin({
       title: 'Custom template',
-      template: 'public/index.html'
+      template: './public/index.html'
     }),
     new webpack.HashedModuleIdsPlugin()
   ]
