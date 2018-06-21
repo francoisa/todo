@@ -12,11 +12,10 @@ const appQuery = graphql`
       ...App_viewer
     }
   }`
-//const loginQuery = graphql`query Routes_Login_Query { viewer { ...Login_viewer } }`
 
-const homepQuery = graphql`
-  query Routes_Home_Query($nodeId: String!) {
-    viewer(nodeId: $nodeId) {
+const homeQuery = graphql`
+  query Routes_Home_Query {
+    viewer(nodeId: "1") {
       ...Home_viewer
     }
   }`
@@ -30,5 +29,9 @@ export default makeRouteConfig(
     render={({ match, ownProps, props }) =>
       <App {...match} {...ownProps} {...props} isLoading={!props} />}
   >
+    <Route
+      query={homeQuery}
+      Component={HomePage}
+    />
   </Route>,
 )

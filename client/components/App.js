@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { routerShape } from 'found/lib/PropTypes';
 import '../css/App.css';
-
+import environment from '../relay-environment'
 import {graphql, createFragmentContainer,} from 'react-relay';
 import Todolist from './Todolist';
 import AddTodo from './AddTodo';
@@ -34,9 +34,9 @@ class App extends Component {
           </header>
          <div className="list">
                 <div>
-                  <div className='subheading'>welcome: {props.viewer.username}</div>
-                  <AddTodo environment={environment} viewer={props.viewer}/>
-                  <Todolist todos={props.viewer} userId={props.viewer.id}/>
+                  <div className='subheading'>welcome: {viewer.username}</div>
+                  <AddTodo environment={environment} viewer={viewer}/>
+                  <Todolist todos={viewer} userId={viewer.id}/>
                 </div>)
            {children}
          </div>
