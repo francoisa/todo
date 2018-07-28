@@ -43,11 +43,33 @@ type EditTodoPayload {
   todoEdge: TodoEdge
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type LoginPayload {
+  user: viewer
+  clientMutationId: String
+}
+
+input LogoutInput {
+  clientMutationId: String
+}
+
+type LogoutPayload {
+  user: viewer
+  clientMutationId: String
+}
+
 type Mutation {
   addTodo(input: AddTodoInput!): AddTodoPayload
   deleteTodo(input: DeleteTodoInput!): DeleteTodoPayload
   editTodo(input: EditTodoInput!): EditTodoPayload
   createSession(input: CreateSessionInput!): CreateSessionPayload
+  login(input: LoginInput!): LoginPayload
+  logout(input: LogoutInput!): LogoutPayload
 }
 
 """An object with an ID"""
@@ -119,6 +141,7 @@ type viewer implements Node {
 
   """email address."""
   email: String
+  isLoggedIn: Boolean
 
   """first and last name."""
   username: String

@@ -10,6 +10,7 @@
   "dependencies": {
     "base-64": "^0.1.0",
     "cookie-session": "^2.0.0-beta.3",
+    "debug": "^3.1.0",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "express-jwt": "^5.3.1",
@@ -27,7 +28,8 @@
     "react-relay": "^1.6.0",
     "relay-compiler": "^1.6.0",
     "relay-runtime": "^1.6.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -55,6 +57,7 @@
   },
   "scripts": {
     "build": "webpack --config config/webpack.config.prod.js --display-modules",
+    "doc": "documentation build server/** -o doc/documentation.md -f md ",
     "relay": "relay-compiler --src . --schema server/graphql/schema.graphql --extensions js jsx",
     "schema": "babel-node scripts/updateSchema.js",
     "start": "babel-node scripts/start",

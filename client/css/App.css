@@ -13,6 +13,11 @@
   font-size: 1.5em;
 }
 
+.title {
+  text-decoration: none;
+  color: white;
+}
+
 .App-intro {
   padding: 5px;
   font-size: large;

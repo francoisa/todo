@@ -6,7 +6,7 @@ const common = require('./webpack.config.common');
 module.exports = merge(common, {
   mode: 'development',
   devServer: {
-    contentBase: path.join(__dirname,'../dist'),
+    contentBase: bundlePath,
     hot: true,
     hotOnly: true,
     path: bundlePath,

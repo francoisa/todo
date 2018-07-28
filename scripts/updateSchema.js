@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { printSchema } from 'graphql/utilities';
+
 import { TodoSchema } from '../server/graphql/todolistSchema';
-import { printSchema } from 'graphql';
 
 const schemaPath = path.resolve(__dirname, '../server/graphql/schema.graphql');
 

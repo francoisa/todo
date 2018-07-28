@@ -11,9 +11,9 @@ class App extends Component {
   static propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     viewer: PropTypes.shape({
-      id: PropTypes.String
+      id: PropTypes.string,
+      username: PropTypes.string
     }),
-    children: PropTypes.node.isRequired,
     router: routerShape.isRequired,
     isLoading: PropTypes.bool,
   }
@@ -26,20 +26,14 @@ class App extends Component {
   }
 
   render() {
-    const { viewer, children, isLoading } = this.props;
+    const { viewer, isLoading } = this.props;
     return (
-       <div className="App">
-          <header className="App-header">
-           <h1 className="App-title">Todo</h1>
-          </header>
-         <div className="list">
-                <div>
-                  <div className='subheading'>welcome: {viewer.username}</div>
-                  <AddTodo environment={environment} viewer={viewer}/>
-                  <Todolist todos={viewer} userId={viewer.id}/>
-                </div>)
-           {children}
-         </div>
+       <div className="list">
+              <div>
+                <div className='subheading'>welcome: {viewer.username}</div>
+                <AddTodo environment={environment} viewer={viewer}/>
+                <Todolist todos={viewer} userId={viewer.id}/>
+              </div>
        </div>
     );
   }

@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
+    context: path.resolve(__dirname, ".."),
     main: "./index.js",
     vendor: ['react', 'react-dom', 'relay-runtime']
   },
@@ -40,7 +41,7 @@ module.exports = {
   resolve: { extensions: ['*', '.js', '.jsx'] },
   output: {
     filename: "[name].[hash].js",
-    path: path.resolve(__dirname, '../dist')
+    path: path.resolve(bundlePath)
   },
   optimization: {
     splitChunks: {
@@ -48,8 +49,11 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin('../dist'),
-    new CleanWebpackPlugin(['../dist']),
+    new webpack.HotModuleReplacementPlugin(bundlePath),
+    new CleanWebpackPlugin(
+      ["dist"],
+      { root: path.resolve(__dirname , '..'), verbose: false },
+    ),
     new HtmlWebpackPlugin({
       title: 'Custom template',
       template: './public/index.html'
