@@ -1,9 +1,8 @@
 import {
-  GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
-  GraphQLString,
+  GraphQLString
 } from 'graphql';
 
 import {
@@ -17,60 +16,27 @@ import {
   nodeDefinitions
 } from 'graphql-relay';
 
+import addTodoMutation from './mutations/addTodoMutation';
+import deleteTodoMutation from './mutations/deleteTodoMutation';
+import editTodoMutation from './mutations/editTodoMutation';
+import createSessionMutation from './mutations/createSessionMutation';
+import LoginMutation from './mutations/LoginMutation';
+import LogoutMutation from './mutations/LogoutMutation';
+
+import todoType from './types/todoType';
+import viewerType from './types/viewerType';
+import { NodeDefinitions } from './types/todoType';
+
+
 /**
+ *
  * interface Node {
  *   id: ID!
- * }
- *
- * type viewer : Node {
- *   id: ID!
- *   name: String
- *   list: TodoConnection
- * }
- *
- * type Todo : Node {
- *   id: ID!
- *   text: String
- *   status: String
- * }
- *
- * type TosoConnection {
- *   edges: [TodoEdge]
- *   pageInfo: PageInfo!
- * }
- *
- * type TodoEdge {
- *   cursor: String!
- *   node: Todo
- * }
- *
- * type PageInfo {
- *   hasNextPage: Boolean!
- *   hasPreviousPage: Boolean!
- *   startCursor: String
- *   endCursor: String
  * }
  *
  * type Query {
  *   getTodo(input: TodoInput): Todo
  *   node(id: ID!): Node
- * }
- *
- * input SessionInput {
- *   username: String!,
- *   password: String!
- * }
- *
- * type SessionPayload {
- *   clientMutationId: string
- *   username: String,
- *   token: String,
- *   list: TodoConnection
- * }
- *
- * type AddTodoPayload {
- *   clientMutationId: string
- *   todo: Todo
  * }
  *
  * type Mutation {
@@ -81,78 +47,6 @@ import {
  * }
  */
 
-/**
- * We get the node interface and field from the relay library.
- *
- * The first method is the way we resolve an ID to its object. The second is the
- * way we resolve an object that implements node to its type.
- */
-const { nodeInterface, nodeField } = nodeDefinitions(
-  (globalId, dao) => {
-    const { type, id } = fromGlobalId(globalId);
-    if (type === 'viewer') {
-      return dao.getSession(id);
-    }
-    if (type === 'Todo') {
-      return dao.getTodo(id);
-    }
-    return null;
-  },
-  obj => {
-    return obj.list ? viewerType : todoType;
-  }
-);
-
-const todoType = new GraphQLObjectType({
-  name: 'Todo',
-  description: 'A task',
-  interfaces: [ nodeInterface ],
-  fields: () => ({
-    id: globalIdField(),
-    text: {
-      type: GraphQLString,
-      description: 'The text of the todo item.'
-    },
-    status: {
-      type: GraphQLString,
-      description: 'The status of the todo item.'
-    }
-  })
-});
-
-const { connectionType: todoConnection, edgeType: GraphQLTodoEdge } =
-  connectionDefinitions({ name: 'Todo', nodeType: todoType });
-
-const viewerType = new GraphQLObjectType({
-  name: 'viewer',
-  description: 'A logged in user',
-  interfaces: [ nodeInterface ],
-  fields: () => ({
-    id: globalIdField(),
-    email: {
-      type: GraphQLString,
-      description: 'email address.'
-    },
-    username: {
-      type: GraphQLString,
-      description: 'first and last name.'
-    },
-    token: {
-      type: GraphQLString,
-      description: 'jwt tokwn.'
-    },
-    list: {
-      type: todoConnection,
-      description: 'The user\'s todo list.',
-      args: connectionArgs,
-      resolve: (viewer, args, dao) => connectionFromArray(
-        viewer.list.map(dao.getTodo),
-        args
-      )
-    }
-  })
-});
-
 const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
@@ -161,110 +55,19 @@ const queryType = new GraphQLObjectType({
       args: {
         nodeId: { type: new GraphQLNonNull(GraphQLString) }
       },
-        resolve: (_, {nodeId}, dao) => dao.getTodo(nodeId)
+      resolve: (_, {nodeId}, dao) => dao.getTodo(nodeId)
     },
     viewer: {
       type: viewerType,
       args: {
         nodeId: { type: new GraphQLNonNull(GraphQLString) }
       },
-        resolve: (_, {nodeId}, dao) => dao.getSession(nodeId)
+      resolve: (_, {nodeId}, dao) => dao.getSession(nodeId)
     },
-    node: nodeField
+    node: NodeDefinitions.nodeField
   })
 });
 
-const addTodoMutation = mutationWithClientMutationId({
-  name: 'AddTodo',
-  inputFields: {
-    userId: { type: new GraphQLNonNull(GraphQLString) },
-    text: { type: new GraphQLNonNull(GraphQLString) }
-  },
-  outputFields: {
-    clientMutationId: {type: GraphQLString},
-    todoEdge: {
-      type: GraphQLTodoEdge,
-      resolve: ({localTodoId, userId}, args, dao) => {
-        console.log('userId: ' + userId + ' localTodoId: ' + localTodoId);
-        const todo = dao.getTodo(localTodoId);
-        console.log('todo: ' + JSON.stringify(todo));
-        return {
-          cursor: cursorForObjectInConnection(dao.getTodos(userId), todo),
-          node: todo
-        };
-      }
-    }
-  },
-  mutateAndGetPayload: ({ text, userId }, dao) => {
-    const newTodo = dao.addTodo(text);
-    const {id} = fromGlobalId(userId);
-    return {localTodoId: newTodo.id, userId: id};
-  }
-});
-
-const deleteTodoMutation = mutationWithClientMutationId({
-  name: 'DeleteTodo',
-  inputFields: {
-    nodeId: { type: new GraphQLNonNull(GraphQLID) }
-  },
-  outputFields: {
-    deletedId: {
-      type: GraphQLID,
-      resolve: ({nodeId}) => nodeId
-    }
-  },
-  mutateAndGetPayload: ({ nodeId }, dao) => {
-    const { id } = fromGlobalId(nodeId);
-    dao.deleteTodo(id);
-    return { nodeId };
-  }
-});
-
-const editTodoMutation = mutationWithClientMutationId({
-  name: 'EditTodo',
-  inputFields: {
-    userId: { type: new GraphQLNonNull(GraphQLString) },
-    nodeId: { type: new GraphQLNonNull(GraphQLString) },
-    text: { type: GraphQLString },
-    status: { type: GraphQLString }
-  },
-  outputFields: {
-    clientMutationId: {type: GraphQLString},
-    todoEdge: {
-      type: GraphQLTodoEdge,
-      resolve: ({todo, userId}, args, dao) => {
-      return {
-          cursor: cursorForObjectInConnection(dao.getTodos(userId), todo),
-          node: todo
-        };
-      }
-    }
-  },
-  mutateAndGetPayload: ({ userId, nodeId, text, status }, dao) => {
-    const { id } = fromGlobalId(nodeId);
-    const updatedTodo = dao.editTodo(id, text, status);
-    const userLocalId = fromGlobalId(userId);
-    return {userId: userLocalId.id, todo: updatedTodo};
-  }
-});
-
-const createSessionMutation = mutationWithClientMutationId({
-  name: 'CreateSession',
-  inputFields: {
-    username: { type: new GraphQLNonNull(GraphQLString) },
-    password: { type: new GraphQLNonNull(GraphQLString) }
-  },
-  outputFields: {
-    viewer: {
-      type: viewerType,
-      resolve: payload => payload
-    }
-  },
-  mutateAndGetPayload: ({ username, password }, dao) => {
-    const newSession = dao.createSession(username, password);
-    return newSession;
-  }
-});
 
 /**
  * This is the type that will be the root of our mutations, and the
@@ -277,7 +80,9 @@ const mutationType = new GraphQLObjectType({
     addTodo: addTodoMutation,
     deleteTodo: deleteTodoMutation,
     editTodo: editTodoMutation,
-    createSession: createSessionMutation
+    createSession: createSessionMutation,
+    login: LoginMutation,
+    logout: LogoutMutation
   })
 });
 
