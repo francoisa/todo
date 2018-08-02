@@ -9,6 +9,8 @@ import {
 
 import viewerType from '../types/viewerType';
 
+import { createToken, decodeToken } from '../../authentication';
+
 /**
  *
  * input SessionInput {
@@ -35,8 +37,12 @@ export default mutationWithClientMutationId({
       resolve: payload => payload
     }
   },
-  mutateAndGetPayload: ({ username, password }, dao) => {
+  mutateAndGetPayload: ({ username, password }, dao, { rootValue }) => {
     const newSession = dao.createSession(username, password);
+    if (newSession) {
+      rootValue.session.token = createToken(newSession);
+      rootValue.tokenData = decodeToken(rootValue.session.token);
+    }
     return newSession;
   }
 });

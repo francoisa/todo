@@ -13,7 +13,7 @@ import { SECRET } from './config'
   */
 export function createToken({ id } = {}) {
   // eslint-disable-next-line no-undef
-  log(`create token with user id ${id}`)
+  console.log(`create token with user id ${id}`)
   return id && jwt.sign({ userId: id }, SECRET)
 }
 

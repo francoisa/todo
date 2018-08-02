@@ -40,8 +40,10 @@ export default new GraphQLObjectType({
     },
     isLoggedIn: {
       type: GraphQLBoolean,
-      resolve: (obj, args, { db }, { rootValue: { tokenData } }) =>
-        tokenData.userId !== null
+      resolve: (obj, args, { db }, { rootValue: { tokenData } }) => {
+        console.log("tokenData: " + JSON.stringify(tokenData));
+        return (tokenData.userId != null);
+      }
     },
     username: {
       type: GraphQLString,

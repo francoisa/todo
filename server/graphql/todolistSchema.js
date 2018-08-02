@@ -20,6 +20,7 @@ import addTodoMutation from './mutations/addTodoMutation';
 import deleteTodoMutation from './mutations/deleteTodoMutation';
 import editTodoMutation from './mutations/editTodoMutation';
 import createSessionMutation from './mutations/createSessionMutation';
+import deleteSessionMutation from './mutations/deleteSessionMutation';
 import LoginMutation from './mutations/LoginMutation';
 import LogoutMutation from './mutations/LogoutMutation';
 
@@ -81,6 +82,7 @@ const mutationType = new GraphQLObjectType({
     deleteTodo: deleteTodoMutation,
     editTodo: editTodoMutation,
     createSession: createSessionMutation,
+    deleteSession: deleteSessionMutation,
     login: LoginMutation,
     logout: LogoutMutation
   })

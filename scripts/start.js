@@ -55,11 +55,16 @@ const handleNonRoot = function (req, res, next) {
 const graphQLServer = express();
 const ObjectDao = require('../server/todolistObjectDao').ObjectDao;
 const dao = new ObjectDao();
-graphQLServer.use('/graphql', graphQLHTTP({
-    schema: schema,
+import sessionMiddleware from '../server/sessionMiddleware';
+graphQLServer.use(sessionMiddleware);
+graphQLServer.use('/graphql', graphQLHTTP(({ session, tokenData }) => ({
     context: dao,
-    graphiql: true
-}));
+    graphiql: true,
+    pretty: true,
+    rootValue: { session, tokenData },
+    schema: schema,
+}))
+);
 
 graphQLServer.listen(GRAPHQL_PORT);
 console.log('GraphQL server listening on port: ' + GRAPHQL_PORT);
