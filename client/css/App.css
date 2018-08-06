@@ -39,3 +39,11 @@
 ul.todolist  {
     list-style-type: none
 }
+
+span.logout {
+    float: right;
+}
+
+span.logout a {
+    color: white;
+}

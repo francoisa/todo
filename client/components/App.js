@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { routerShape } from 'found/lib/PropTypes';
 import '../css/App.css';
-import environment from '../relay-environment'
 import {graphql, createFragmentContainer,} from 'react-relay';
-import Todolist from './Todolist';
-import AddTodo from './AddTodo';
 
 class App extends Component {
   static propTypes = {
@@ -24,22 +21,24 @@ class App extends Component {
       navigationOpen: false,
     }
   }
-
+  logoutLink(isLoggedIn) {
+    console.log("App - isLoggedIn: " + isLoggedIn);
+    if (isLoggedIn) {
+      return (<span className="logout"><a href="/logout">Logout</a></span>);
+    }
+    else {
+      return null;
+    }
+  }
   render() {
     const { viewer, children, isLoading } = this.props;
     return (
        <div className="App">
           <header className="App-header">
-           <h1 className="App-title">Todo</h1>
+           <span className="App-title">User Authentication with Relay</span>
+           {this.logoutLink(viewer.isLoggedIn)}
           </header>
-         <div className="list">
-                <div>
-                  <div className='subheading'>welcome: {viewer.username}</div>
-                  <AddTodo environment={environment} viewer={viewer}/>
-                  <Todolist todos={viewer} userId={viewer.id}/>
-                </div>
-           {children}
-         </div>
+          {children}
        </div>
     );
   }
@@ -50,6 +49,7 @@ export default createFragmentContainer(
   graphql`
     fragment App_viewer on viewer {
       id,
+      isLoggedIn,
       username,
       ...Todolist_todos
     }

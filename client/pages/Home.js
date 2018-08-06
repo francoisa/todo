@@ -3,16 +3,33 @@ import PropTypes from 'prop-types';
 import { createFragmentContainer, graphql } from 'react-relay';
 
 import styles from './Home.css';
+import Todolist from '../components/Todolist';
+import AddTodo from '../components/AddTodo';
+import Login from '../components/Login';
+import environment from '../relay-environment'
 
-const HomePage = ({ viewer }) => (
-  <div className={styles.content}>
-    <h1>User Authentication with Relay</h1>
-
-    <div>
-      You are currently {!viewer.id && 'not'} logged in.
-    </div>
-  </div>
-)
+const HomePage = ({ viewer }) => {
+  console.log('viewer.isLoggedIn: ' + viewer.isLoggedIn);
+  if (viewer.isLoggedIn) {
+    return (
+      <div className={styles.content}>
+        <div className="list">
+          <div className='subheading'>welcome: {viewer.username}</div>
+          <AddTodo environment={environment} viewer={viewer}/>
+          <Todolist todos={viewer} userId={viewer.id}/>
+        </div>
+      </div>
+    )
+  }
+  else {
+    return (
+      <div className={styles.content}>
+        You are currently {!viewer.isLoggedIn && 'not'} logged in.
+        <Login  environment={environment} viewer={viewer}/>
+      </div>
+    )
+  }
+}
 
 
 HomePage.propTypes = {
@@ -25,7 +42,11 @@ export default createFragmentContainer(
   HomePage,
   graphql`
     fragment Home_viewer on viewer {
-      id
+      id,
+      isLoggedIn,
+      username,
+      ...Todolist_todos,
+      ...Login_viewer
     }
   `,
 )

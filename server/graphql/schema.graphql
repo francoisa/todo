@@ -20,6 +20,15 @@ type CreateSessionPayload {
   clientMutationId: String
 }
 
+input deleteSessionInput {
+  clientMutationId: String
+}
+
+type deleteSessionPayload {
+  viewer: viewer
+  clientMutationId: String
+}
+
 input DeleteTodoInput {
   nodeId: ID!
   clientMutationId: String
@@ -68,6 +77,7 @@ type Mutation {
   deleteTodo(input: DeleteTodoInput!): DeleteTodoPayload
   editTodo(input: EditTodoInput!): EditTodoPayload
   createSession(input: CreateSessionInput!): CreateSessionPayload
+  deleteSession(input: deleteSessionInput!): deleteSessionPayload
   login(input: LoginInput!): LoginPayload
   logout(input: LogoutInput!): LogoutPayload
 }
