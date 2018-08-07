@@ -1,7 +1,7 @@
 import express from 'express';
 import graphQLHTTP from 'express-graphql';
 import path from 'path';
-const schema  = require('./todolistSchema').TodoSchema;
+const schema  = require('./graphql/todolistSchema').TodoSchema;
 const ObjectDao = require('./todolistObjectDao').ObjectDao;
 
 const GRAPHQL_PORT = 8080;

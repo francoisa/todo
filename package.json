@@ -57,6 +57,7 @@
     "build": "webpack --config config/webpack.config.prod.js --display-modules",
     "relay": "relay-compiler --src . --schema server/graphql/schema.graphql --extensions js jsx",
     "schema": "babel-node scripts/updateSchema.js",
+    "server": "babel-node server/server.js",
     "start": "babel-node scripts/start",
     "test": "jest"
   }
