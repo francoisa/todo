@@ -6,6 +6,7 @@ const mutation = graphql`
     deleteSession(input: $input) {
       viewer {
         id
+        isLoggedIn
       }
     }
   }
@@ -21,6 +22,8 @@ function commit(environment, {onCompleted}) {
       mutation,
       variables: { input: {}},
       onCompleted,
+      updater: (store) => {
+      }
     }
   );
 }

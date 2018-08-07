@@ -5,10 +5,12 @@ import Todo from './Todo';
 class Todolist extends Component {
   render() {
     const { list } = this.props.todos;
+      console.log("Todolist - " + JSON.stringify(list));
       return (
          <div>
              <ul className="todolist">
-               {list.edges.map(edge =>
+               {list.edges.filter(edge => edge.node !== null)
+                 .map(edge =>
                  <Todo
                    key={edge.node.id}
                    todo={edge.node}

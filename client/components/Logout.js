@@ -12,6 +12,7 @@ class Logout extends Component {
     DeleteSessionMutation.commit(
       this.props.relay.environment,
       {
+        viewer: this.props.viewer,
         onCompleted: () => this.props.router.push('/')
       }
     );

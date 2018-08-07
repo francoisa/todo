@@ -29,10 +29,10 @@ ObjectDao.prototype.createSession = function(username, password) {
 ObjectDao.prototype.getSession = function(id) {
     if (user.id === id) {
       let session = {id: id,
-                      username: user.username,
-                      email: user.email,
-                      token: 'token',
-                      list: user.list};
+                     username: user.username,
+                     email: user.email,
+                     token: 'token',
+                     list: user.list};
       return session;
     }
     else {
@@ -55,7 +55,7 @@ ObjectDao.prototype.getTodo = function(id) {
 }
 
 ObjectDao.prototype.addTodo = function(text) {
-  let id = String(Object.keys(listItems).length+1);
+  const id = String(user.list.reduce((a, v) => a = Math.max(a, v)) + 1);
   listItems[id] = {id: id, text: text, status: 'open'};
   user.list.push(id);
   return listItems[id];
@@ -85,6 +85,8 @@ ObjectDao.prototype.deleteTodo = function(id) {
   if (id in listItems) {
     console.log('deleting todo item with Id: ' + JSON.stringify(id));
     delete listItems[id];
+    user.list = user.list.filter(v => v !== id);
+
     return true;
   }
   else {
