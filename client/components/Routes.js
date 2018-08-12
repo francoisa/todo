@@ -7,26 +7,11 @@ import App from './App'
 import HomePage from '../pages/Home'
 import Logout from './Logout'
 
-const appQuery = graphql`
-  query Routes_App_Query {
-    viewer(nodeId: "1") {
-      ...App_viewer
-    }
-  }`
+const appQuery = graphql`query Routes_App_Query { viewer { ...App_viewer } }`
 
-const homeQuery = graphql`
-  query Routes_Home_Query {
-    viewer(nodeId: "1") {
-      ...Home_viewer
-    }
-  }`
+const homeQuery = graphql`query Routes_Home_Query { viewer { ...Home_viewer } }`
 
-const logoutQuery = graphql`
-  query Routes_Logout_Query {
-    viewer(nodeId: "1") {
-      ...Logout_viewer
-    }
-  }`
+const logoutQuery = graphql`query Routes_Logout_Query { viewer { ...Logout_viewer } }`
 
 export default makeRouteConfig(
   <Route

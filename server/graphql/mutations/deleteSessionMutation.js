@@ -13,6 +13,7 @@ export default mutationWithClientMutationId({
   mutateAndGetPayload: (obj, { db }, { rootValue }) => {
     // eslint-disable-next-line no-param-reassign
     rootValue.session.token = null
+    rootValue.tokenData.userId = null;
     return { user: {id: null, isLoggedIn: false } }
   },
 })

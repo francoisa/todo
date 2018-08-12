@@ -36,7 +36,7 @@ class Login extends Component {
         viewer: this.props.viewer,
         user: this.state.username,
         pass: this.state.password,
-        onCompleted: () => this.props.router.push('/')
+        onCompleted: () => this.props.router.go('/')
       }
     );
   }

@@ -7,6 +7,20 @@ const mutation = graphql`
       viewer {
         id
         isLoggedIn
+        username
+        email
+        list {
+          pageInfo {
+            hasNextPage
+          }
+          edges {
+            node {
+              id
+              text
+              status
+            }
+          }
+        }
       }
     }
   }
@@ -23,13 +37,15 @@ function commit(environment, {viewer, user, pass, onCompleted}) {
       variables: {
         input: {username: user, password: pass}
       },
-      onCompleted,
+      onCompleted: onCompleted,
       updater: (store) => {
         const payload = store.getRootField('createSession');
-        const viewer = payload.getLinkedRecord('viewer');
-        const isLoggedIn = viewer.getValue('isLoggedIn');
-        console.log('isLoggedIn: ' + isLoggedIn);
-        viewer.isLoggedIn = isLoggedIn;
+        const v = payload.getLinkedRecord('viewer');
+        const isLoggedIn = v.getValue('isLoggedIn');
+        console.log('Login - isLoggedIn: ' + isLoggedIn);
+        const viewerProxy = store.get(viewer.id);
+        viewerProxy.setValue(isLoggedIn, 'isLoggedIn');
+        console.log('Login - isLoggedIn: ' + viewerProxy.getValue('isLoggedIn'));
       }
     }
   );

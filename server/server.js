@@ -18,13 +18,16 @@ const handleNonRoot = function(req, res, next) {
 // Expose a GraphQL endpoint
 const graphQLServer = express();
 const dao = new ObjectDao();
-graphQLServer.use('/', handleNonRoot, graphQLHTTP(
+import sessionMiddleware from './sessionMiddleware';
+graphQLServer.use(sessionMiddleware);
+graphQLServer.use('/', handleNonRoot, graphQLHTTP(({ session, tokenData }) => (
   {
-    schema: schema,
     context: dao,
     graphiql: true,
-    pretty: true
-  })
+    pretty: true,
+    rootValue: { session, tokenData },
+    schema: schema
+  }))
 );
 
 graphQLServer.listen(GRAPHQL_PORT, () => console.log(

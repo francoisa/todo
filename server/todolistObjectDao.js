@@ -29,6 +29,7 @@ ObjectDao.prototype.createSession = function(username, password) {
 ObjectDao.prototype.getSession = function(id) {
     if (user.id === id) {
       let session = {id: id,
+                    isLoggedIn: true,
                      username: user.username,
                      email: user.email,
                      token: 'token',
@@ -36,7 +37,8 @@ ObjectDao.prototype.getSession = function(id) {
       return session;
     }
     else {
-      return {status: 'not found'};
+      let session = {id: null, isLoggedIn: false};
+      return session;
     }
 }
 

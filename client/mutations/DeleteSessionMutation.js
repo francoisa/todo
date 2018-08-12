@@ -12,8 +12,6 @@ const mutation = graphql`
   }
 `;
 
-let tempID = 0;
-
 function commit(environment, {onCompleted}) {
   // Now we just call commitMutation with the appropriate parameters
   return commitMutation(

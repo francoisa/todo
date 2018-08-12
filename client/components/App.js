@@ -20,6 +20,7 @@ class App extends Component {
     this.state = {
       navigationOpen: false,
     }
+    this.logoutLink = this.logoutLink.bind(this);
   }
   logoutLink(isLoggedIn) {
     console.log("App - isLoggedIn: " + isLoggedIn);
@@ -48,10 +49,7 @@ export default createFragmentContainer(
   App,
   graphql`
     fragment App_viewer on viewer {
-      id,
-      isLoggedIn,
-      username,
-      ...Todolist_todos
+      isLoggedIn
     }
   `
 )

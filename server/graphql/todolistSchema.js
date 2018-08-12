@@ -60,15 +60,22 @@ const queryType = new GraphQLObjectType({
     },
     viewer: {
       type: viewerType,
-      args: {
-        nodeId: { type: new GraphQLNonNull(GraphQLString) }
-      },
-      resolve: (_, {nodeId}, dao) => dao.getSession(nodeId)
+      resolve: (_, {nodeId}, dao, { rootValue: { tokenData } }) => {
+        console.log("todolistSchema - queryType.tokenData: "
+          + JSON.stringify(tokenData));
+        if (typeof tokenData !== 'undefined' && tokenData.userId != null) {
+          return dao.getSession(tokenData.userId);
+        }
+        else {
+          return GUEST;
+        }
+      }
     },
     node: NodeDefinitions.nodeField
   })
 });
 
+const GUEST = { isLoggedIn: false, username: '', list: [] };
 
 /**
  * This is the type that will be the root of our mutations, and the

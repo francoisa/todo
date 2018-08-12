@@ -31,7 +31,6 @@ export default createFragmentContainer(
   graphql`
     fragment Logout_viewer on viewer {
       id
-      isLoggedIn
     }
   `,
 )

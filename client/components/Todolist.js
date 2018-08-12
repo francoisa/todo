@@ -5,7 +5,7 @@ import Todo from './Todo';
 class Todolist extends Component {
   render() {
     const { list } = this.props.todos;
-      console.log("Todolist - " + JSON.stringify(list));
+      console.log("Todolist - todos " + JSON.stringify(this.props.todos));
       return (
          <div>
              <ul className="todolist">

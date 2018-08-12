@@ -41,8 +41,8 @@ export default new GraphQLObjectType({
     isLoggedIn: {
       type: GraphQLBoolean,
       resolve: (obj, args, { db }, { rootValue: { tokenData } }) => {
-        console.log("tokenData: " + JSON.stringify(tokenData));
-        return (tokenData.userId != null);
+        console.log("viewerType.tokenData: " + JSON.stringify(tokenData));
+        return (typeof tokenData !== 'undefined' && tokenData.userId != null);
       }
     },
     username: {
@@ -57,10 +57,18 @@ export default new GraphQLObjectType({
       type: TodoConnection.connectionType,
       description: 'The user\'s todo list.',
       args: connectionArgs,
-      resolve: (viewer, args, dao) => connectionFromArray(
-        viewer.list.map(dao.getTodo),
-        args
-      )
+      resolve: (viewer, args, dao) => {
+        console.log('viewrType - list - ' + JSON.stringify(viewer));
+        if (viewer.list) {
+          return connectionFromArray(
+              viewer.list.map(dao.getTodo),
+              args
+            );
+        }
+        else {
+          return connectionFromArray([{text: '', status: 'done'}]);
+        }
+      }
     }
   })
 });
