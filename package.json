@@ -51,7 +51,12 @@
     "webpack": "^4.10.2",
     "webpack-cli": "^3.0.1",
     "webpack-dev-server": "^3.1.4",
-    "webpack-merge": "^4.1.2"
+    "webpack-merge": "^4.1.2",
+    "@storybook/react": "^3.4.10",
+    "@storybook/addon-actions": "^3.4.10",
+    "@storybook/addon-links": "^3.4.10",
+    "@storybook/addons": "^3.4.10",
+    "babel-runtime": "^6.26.0"
   },
   "scripts": {
     "build": "webpack --config config/webpack.config.prod.js --display-modules",
@@ -59,6 +64,8 @@
     "schema": "babel-node scripts/updateSchema.js",
     "server": "babel-node server/server.js",
     "start": "babel-node scripts/start",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   }
 }

@@ -66,7 +66,7 @@ export default new GraphQLObjectType({
             );
         }
         else {
-          return connectionFromArray([{text: '', status: 'done'}]);
+          return connectionFromArray([]);
         }
       }
     }
