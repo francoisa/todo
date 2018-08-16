@@ -14,7 +14,6 @@ import { TodoConnection } from '../types/todoType';
 export default mutationWithClientMutationId({
   name: 'EditTodo',
   inputFields: {
-    userId: { type: new GraphQLNonNull(GraphQLString) },
     nodeId: { type: new GraphQLNonNull(GraphQLString) },
     text: { type: GraphQLString },
     status: { type: GraphQLString }
@@ -23,7 +22,7 @@ export default mutationWithClientMutationId({
     clientMutationId: {type: GraphQLString},
     todoEdge: {
       type: TodoConnection.edgeType,
-      resolve: ({todo, userId}, args, dao) => {
+      resolve: ({userId, todo}, args, dao, rootValue) => {
       return {
           cursor: cursorForObjectInConnection(dao.getTodos(userId), todo),
           node: todo
@@ -31,10 +30,10 @@ export default mutationWithClientMutationId({
       }
     }
   },
-  mutateAndGetPayload: ({ userId, nodeId, text, status }, dao) => {
+  mutateAndGetPayload: ({ nodeId, text, status }, dao, { rootValue: { tokenData } }) => {
     const { id } = fromGlobalId(nodeId);
     const updatedTodo = dao.editTodo(id, text, status);
-    const userLocalId = fromGlobalId(userId);
+    const userLocalId = fromGlobalId(tokenData.userId);
     return {userId: userLocalId.id, todo: updatedTodo};
   }
 });

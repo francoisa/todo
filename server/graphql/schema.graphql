@@ -40,7 +40,6 @@ type DeleteTodoPayload {
 }
 
 input EditTodoInput {
-  userId: String!
   nodeId: String!
   text: String
   status: String

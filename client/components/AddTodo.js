@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AddTodoMutation from '../mutations/AddTodoMutation';
+import Button from '@material-ui/core/Button';
 
 class AddTodo extends Component {
   constructor(props) {
@@ -43,7 +44,9 @@ class AddTodo extends Component {
           <input type='text' name='text' value={text}
              onChange={this.handleTextChange}
              onKeyPress={this.handleKeyPress}/>&nbsp;
-          <button onClick={this.addTodo}>Add</button>
+          <Button onClick={this.addTodo} variant='contained' color='primary' size='small'>
+            Add
+          </Button>
         </div>
     );
   }

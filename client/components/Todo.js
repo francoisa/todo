@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import {graphql, createFragmentContainer} from 'react-relay';
 import EditTodoMutation from '../mutations/EditTodoMutation';
 import DeleteTodoMutation from '../mutations/DeleteTodoMutation';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import NativeSelect from '@material-ui/core/NativeSelect';
 
 class Todo extends Component {
   constructor(props) {
@@ -34,8 +37,7 @@ class Todo extends Component {
               this.props.relay.environment,
               null,
               this.state.text,
-              this.props.todo,
-              this.props.userId
+              this.props.todo
             );
         this.setState({orig: this.state.text});
       }
@@ -47,8 +49,7 @@ class Todo extends Component {
             this.props.relay.environment,
             null,
             event.target.value,
-            this.props.todo,
-            this.props.userId
+            this.props.todo
           );
       this.setState({orig: event.target.value});
     }
@@ -66,18 +67,20 @@ class Todo extends Component {
     const {text, status } = this.state;
     return (
       <li>
-           <select name='status' value={status} onChange={this.handleStatusChange}>
+           <NativeSelect name='status' value={status} onChange={this.handleStatusChange}>
              <option value='open'>open</option>
              <option value='working'>working</option>
              <option value='blocked'>blocked</option>
              <option value='closed'>closed</option>
-           </select>&nbsp;
-           <input type="text" name="text" value={text}
+           </NativeSelect>&nbsp;
+           <TextField type="text" name="text" value={text}
              onChange={this.handleTextChange}
              onBlur={this.submitTextChange}
              onKeyPress={this.handleKeyPress}
            />
-           <button onClick={this.handleDelete}>X</button>
+           <Button onClick={this.handleDelete} color='secondary' size='small'>
+             X
+           </Button>
       </li>
     );
   }

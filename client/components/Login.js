@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { createFragmentContainer, graphql } from 'react-relay'
 import withRouter from 'found/lib/withRouter';
 import CreateSessionMutation from '../mutations/CreateSessionMutation';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class Login extends Component {
   constructor(props) {
@@ -49,13 +51,15 @@ class Login extends Component {
     console.log('viewer: ' + JSON.stringify(this.props.viewer));
     return (
         <div className='addform'>
-          <input type='text' name='username' value={username}
-             onChange={this.handleTextChange}
+          <TextField type='text' label='username' name='username'
+            value={username} onChange={this.handleTextChange}
+            onKeyPress={this.handleKeyPress}/>&nbsp;
+           <TextField type='password' label='password' name='password'
+             value={password} onChange={this.handleTextChange}
              onKeyPress={this.handleKeyPress}/>&nbsp;
-           <input type='password' name='password' value={password}
-              onChange={this.handleTextChange}
-              onKeyPress={this.handleKeyPress}/>&nbsp;
-          <button onClick={this.login}>Login</button>
+          <Button onClick={this.login} color='primary' variant='outlined' size='small'>
+            Login
+          </Button>
         </div>
     );
   }

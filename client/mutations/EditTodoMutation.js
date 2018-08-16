@@ -26,8 +26,7 @@ function commit(
   environment,
   status,
   text,
-  todo,
-  userId
+  todo
 ) {
   // Now we just call commitMutation with the appropriate parameters
   return commitMutation(
@@ -35,15 +34,16 @@ function commit(
     {
       mutation,
       variables: {
-        input: {status: status, text: text, nodeId: todo.id, userId: userId},
+        input: {status: status, text: text, nodeId: todo.id},
       },
       optimisticUpdater: (store) => {
         sharedUpdater(store, {id: todo.id, text: text, status: status});
       },
       updater: (store) => {
-        const payload = store.getRootField('editTodo');
-        const todoEdge = payload.getLinkedRecord('todoEdge');
-        const nodeProxy = todoEdge.getLinkedRecord('node');
+//        const payload = store.getRootField('editTodo');
+//        const todoEdge = payload.getLinkedRecord('todoEdge');
+//        const nodeProxy = todoEdge.getLinkedRecord('node');
+        const nodeProxy = store.get(todo.id);
         const node = {id: nodeProxy.getValue('id')};
         node.text = nodeProxy.getValue('text');
         node.status = nodeProxy.getValue('status');
