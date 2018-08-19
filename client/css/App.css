@@ -47,3 +47,16 @@ span.logout {
 span.logout a {
     color: white;
 }
+
+.root {
+    flexGrow: 1
+}
+
+Typography.flex: {
+    flexGrow: 1
+}
+
+.menuButton {
+    marginLeft: -12;
+    marginRight: 20
+}
