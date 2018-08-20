@@ -3,7 +3,22 @@ import { createFragmentContainer, graphql } from 'react-relay'
 import withRouter from 'found/lib/withRouter';
 import CreateSessionMutation from '../mutations/CreateSessionMutation';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import environment from '../relay-environment'
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  }
+});
 
 class Login extends Component {
   constructor(props) {
@@ -33,12 +48,12 @@ class Login extends Component {
   }
   sharedLogin() {
     CreateSessionMutation.commit(
-      this.props.environment,
+      environment,
       {
         viewer: this.props.viewer,
         user: this.state.username,
         pass: this.state.password,
-        onCompleted: () => this.props.router.go('/')
+        onCompleted: () => this.props.router.go(-1)
       }
     );
   }
@@ -48,24 +63,40 @@ class Login extends Component {
   }
   render() {
     const { username, password } = this.state;
-    console.log('viewer: ' + JSON.stringify(this.props.viewer));
+    const { viewer } = this.props;
+    const { classes } = this.props;
+    console.log('viewer: ' + JSON.stringify(viewer));
     return (
-        <div className='addform'>
-          <TextField type='text' label='username' name='username'
-            value={username} onChange={this.handleTextChange}
-            onKeyPress={this.handleKeyPress}/>&nbsp;
-           <TextField type='password' label='password' name='password'
-             value={password} onChange={this.handleTextChange}
-             onKeyPress={this.handleKeyPress}/>&nbsp;
-          <Button onClick={this.login} color='primary' variant='outlined' size='small'>
-            Login
-          </Button>
-        </div>
+        <form className={classes.container} noValidate autoComplete="off">
+          <Grid container spacing={8}>
+            <Grid item xs={8}>
+              <TextField type='text' label='username' name='username'
+                value={username} onChange={this.handleTextChange}
+                className={classes.textField}
+                onKeyPress={this.handleKeyPress}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <TextField type='password' label='password' name='password'
+                value={password} onChange={this.handleTextChange}
+                className={classes.textField}
+                onKeyPress={this.handleKeyPress}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <Button onClick={this.login} color='primary' variant='outlined' size='small' margin="normal">
+                Login
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
     );
   }
 }
 
-export default createFragmentContainer(
+export default withStyles(styles)(createFragmentContainer(
   withRouter(Login),
   graphql`
     fragment Login_viewer on viewer {
@@ -73,4 +104,4 @@ export default createFragmentContainer(
       isLoggedIn
     }
   `,
-)
+))

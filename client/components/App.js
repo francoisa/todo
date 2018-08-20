@@ -10,12 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import withRouter from 'found/lib/withRouter';
+import DeleteSessionMutation from '../mutations/DeleteSessionMutation';
+import environment from '../relay-environment'
 
 class App extends Component {
   static propTypes = {
@@ -45,7 +44,13 @@ class App extends Component {
   };
   logout() {
     this.setState({ anchorEl: null });
-    this.props.router.push('/logout');
+    DeleteSessionMutation.commit(
+      environment,
+      {
+        viewer: this.props.viewer,
+        onCompleted: () => this.props.router.push('/')
+      }
+    );
   }
   logoutLink(isLoggedIn) {
     console.log("App - isLoggedIn: " + isLoggedIn);
@@ -111,6 +116,7 @@ export default createFragmentContainer(
   withRouter(App),
   graphql`
     fragment App_viewer on viewer {
+      id
       isLoggedIn
     }
   `

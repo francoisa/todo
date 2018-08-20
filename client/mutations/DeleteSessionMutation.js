@@ -12,7 +12,7 @@ const mutation = graphql`
   }
 `;
 
-function commit(environment, {onCompleted}) {
+function commit(environment, {onCompleted, viewer}) {
   // Now we just call commitMutation with the appropriate parameters
   return commitMutation(
     environment,
@@ -21,6 +21,9 @@ function commit(environment, {onCompleted}) {
       variables: { input: {}},
       onCompleted,
       updater: (store) => {
+        console.log('DeleteSessionMutation - viewer: ' + JSON.stringify(viewer))
+        const viewerProxy = store.get(viewer.id);
+        viewerProxy.setValue(false, 'isLoggedIn');
       }
     }
   );

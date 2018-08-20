@@ -7,9 +7,10 @@ import Todolist from '../components/Todolist';
 import AddTodo from '../components/AddTodo';
 import Login from '../components/Login';
 import environment from '../relay-environment'
+import withRouter from 'found/lib/withRouter';
 
-const HomePage = ({ viewer }) => {
-  console.log('viewer.isLoggedIn: ' + viewer.isLoggedIn);
+const HomePage = ({ viewer, router }) => {
+  console.log('Home - viewer.isLoggedIn: ' + viewer.isLoggedIn);
   if (viewer.isLoggedIn) {
     return (
       <div className={styles.content}>
@@ -22,12 +23,8 @@ const HomePage = ({ viewer }) => {
     )
   }
   else {
-    return (
-      <div className={styles.content}>
-        You are currently {!viewer.isLoggedIn && 'not'} logged in.
-        <Login  environment={environment} viewer={viewer}/>
-      </div>
-    )
+    router.push('/login');
+    return null;
   }
 }
 
@@ -39,14 +36,13 @@ HomePage.propTypes = {
 }
 
 export default createFragmentContainer(
-  HomePage,
+  withRouter(HomePage),
   graphql`
     fragment Home_viewer on viewer {
       id,
       isLoggedIn,
       username,
-      ...Todolist_todos,
-      ...Login_viewer
+      ...Todolist_todos
     }
   `,
 )
