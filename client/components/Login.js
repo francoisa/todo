@@ -8,25 +8,35 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import environment from '../relay-environment'
 
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import FormControl from '@material-ui/core/FormControl';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
+    width: 200
   }
 });
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = {username: '', password: ''};
+    this.state = {username: '', password: '', showPassword: false, type: 'password'};
     this.login = this.login.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.sharedLogin = this.sharedLogin.bind(this);
+    this.handleMouseDownPassword = this.handleMouseDownPassword.bind(this);
+    this.showHide = this.showHide.bind(this);
   }
   handleKeyPress(event) {
     if (event.charCode === 13) {
@@ -45,6 +55,12 @@ class Login extends Component {
     else {
       this.setState({password: event.target.value});
     }
+  }
+  handleMouseDownPassword(event) {
+    event.preventDefault();
+  }
+  showHide() {
+    this.setState({ showPassword: !this.state.showPassword })
   }
   sharedLogin() {
     CreateSessionMutation.commit(
@@ -68,22 +84,42 @@ class Login extends Component {
     console.log('viewer: ' + JSON.stringify(viewer));
     return (
         <form className={classes.container} noValidate autoComplete="off">
-          <Grid container spacing={8}>
+          <Grid container spacing={0}>
             <Grid item xs={8}>
-              <TextField type='text' label='username' name='username'
-                value={username} onChange={this.handleTextChange}
-                className={classes.textField}
-                onKeyPress={this.handleKeyPress}
-                margin="normal"
-              />
+              <FormControl>
+                <InputLabel htmlFor="username">username</InputLabel>
+                <Input type='text' label='username' name='username'
+                  value={username} onChange={this.handleTextChange}
+                  className={classes.textField}
+                  onKeyPress={this.handleKeyPress}
+                />
+            </FormControl>
             </Grid>
             <Grid item xs={8}>
-              <TextField type='password' label='password' name='password'
-                value={password} onChange={this.handleTextChange}
-                className={classes.textField}
-                onKeyPress={this.handleKeyPress}
-                margin="normal"
-              />
+              <FormControl>
+                <InputLabel htmlFor="password">password</InputLabel>
+                <Input
+                  id="password"
+                  type={this.state.showPassword ? 'text' : 'password'}
+                  name='password'
+                  label='password'
+                  value={password}
+                  className={classes.textField}
+                  onChange={this.handleTextChange}
+                  onKeyPress={this.handleKeyPress}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='show password'
+                        onClick={this.showHide}
+                        onMouseOver={this.handleMouseDownPassword}
+                        >
+                          {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
             </Grid>
             <Grid item xs={8}>
               <Button onClick={this.login} color='primary' variant='outlined' size='small' margin="normal">

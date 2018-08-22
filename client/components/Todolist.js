@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {graphql, createFragmentContainer} from 'react-relay';
 import Todo from './Todo';
+import List from '@material-ui/core/List';
 
 class Todolist extends Component {
   render() {
@@ -8,7 +9,7 @@ class Todolist extends Component {
       console.log("Todolist - todos " + JSON.stringify(this.props.todos));
       return (
          <div>
-             <ul className="todolist">
+             <List>
                {list.edges.filter(edge => edge.node !== null)
                  .map(edge =>
                  <Todo
@@ -17,7 +18,7 @@ class Todolist extends Component {
                    userId={this.props.userId}
                  />
                )}
-              </ul>
+             </List>
           </div>
     );
   }

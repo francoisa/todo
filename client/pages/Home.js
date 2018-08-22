@@ -13,12 +13,10 @@ const HomePage = ({ viewer, router }) => {
   console.log('Home - viewer.isLoggedIn: ' + viewer.isLoggedIn);
   if (viewer.isLoggedIn) {
     return (
-      <div className={styles.content}>
-        <div className="list">
-          <div className='subheading'>welcome: {viewer.username}</div>
-          <AddTodo environment={environment} viewer={viewer}/>
-          <Todolist todos={viewer} userId={viewer.id}/>
-        </div>
+      <div>
+        <div className='subheading'>welcome: {viewer.username}</div>
+        <AddTodo environment={environment} viewer={viewer}/>
+        <Todolist todos={viewer} userId={viewer.id}/>
       </div>
     )
   }

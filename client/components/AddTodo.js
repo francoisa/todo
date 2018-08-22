@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
+import FormControl from '@material-ui/core/FormControl';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Input from '@material-ui/core/Input';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
+import IconButton from '@material-ui/core/IconButton';
+
 import AddTodoMutation from '../mutations/AddTodoMutation';
-import Button from '@material-ui/core/Button';
+import '../css/Todolist.css';
 
 class AddTodo extends Component {
   constructor(props) {
@@ -40,14 +46,27 @@ class AddTodo extends Component {
   render() {
     const { text } = this.state;
     return (
-        <div className='addform'>
-          <input type='text' name='text' value={text}
-             onChange={this.handleTextChange}
-             onKeyPress={this.handleKeyPress}/>&nbsp;
-          <Button onClick={this.addTodo} variant='contained' color='primary' size='small'>
-            Add
-          </Button>
-        </div>
+      <div className='form_holder'>
+        <FormControl fullWidth>
+          <Input
+            type='text'
+            name='text'
+            value={text}
+            onChange={this.handleTextChange}
+            onKeyPress={this.handleKeyPress}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton
+                  aria-label='add todo'
+                  onClick={this.addTodo}
+                  >
+                    <AddIcon/>
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      </div>
     );
   }
 }

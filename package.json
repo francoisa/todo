@@ -9,7 +9,7 @@
   "proxy": "http://localhost:8080",
   "dependencies": {
     "@material-ui/core": "^1.5.0",
-    "@material-ui/icons": "^2.0.2",
+    "@material-ui/icons": "^2.0.3",
     "@storybook/addon-graphql": "^3.4.10",
     "base-64": "^0.1.0",
     "cookie-session": "^2.0.0-beta.3",
